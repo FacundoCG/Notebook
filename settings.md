@@ -2,36 +2,30 @@
 
 A handy reference for managing files, compiling, and running tests efficiently when working with C++ in **Geany** on **Ubuntu**.
 
----
+# Commands Geany
 
-## 🧹 Clean Up
-
-### 🔸 Delete Executables in the Current Directory
+### Compile with Warnings (F8)
 ```bash
-find . -maxdepth 1 -type f -executable -exec rm -f {} \;
+g++ -std=gnu++11 -g -O2 -Wconversion -Wshadow -Wall -Wextra -D_GLIBCXX_DEBUG -c "%f"
 ```
 
-### 🔸 Find All Executable Files (Current Directory + Subdirectories)
+### Build (F9)
 ```bash
-find . -type f -executable
+g++ -std=gnu++11 -g -O2 -Wconversion -Wshadow -Wall -Wextra -D_GLIBCXX_DEBUG -o "%e" "%f"
 ```
 
-### 🔸 Delete All Executable Files (Current Directory + Subdirectories)
+### Execute All Tests and Save Output in a File (F5)
+> If the file is named `problem.cpp`. The tests have to be `problem*.in` and the output will be saved in `problem.out`
 ```bash
-find . -type f -executable -delete
+> "%e".out; for x in "./%e"*.in ; do echo "$(basename "$x")"  >> "%e".out ; "./%e" < "$x" >> "%e".out 2>&1 ; echo "==========================" >> "%e".out ; done
 ```
 
----
-
-## 📂 Test Input/Output Management
-
-### 📅 Generate a `.in` File for Testing  
-> You will need to rename the generated file properly afterward.
+### Generate a `.in` File for Testing  
 ```bash
 "./%e" > "%e".in
 ```
 
-### 🧪 Execute All Tests
+### Execute All Tests
 ```bash
 for x in "./%e"*.in ; do
     echo "$(basename "$x")"
@@ -40,35 +34,22 @@ for x in "./%e"*.in ; do
 done
 ```
 
-### 🧪 Execute All Tests and Save Output in a File (Overwrites the File)
+# Commands
+
+### Delete Executables in the Current Directory
 ```bash
-> "%e".out
-for x in "./%e"*.in ; do
-    echo "$(basename "$x")"  >> "%e".out
-    "./%e" < "$x" >> "%e".out 2>&1
-    echo "==========================" >> "%e".out
-done
+find . -maxdepth 1 -type f -executable -exec rm -f {} \;
 ```
 
-### 🧂 Compare Two Output Files  
-> No output means the files are equal.
+### Find All Executable Files (Current Directory + Subdirectories)
 ```bash
-diff file_name.out file_name2.out
+find . -type f -executable
 ```
 
----
-
-## ⚙️ Compilation
-
-### Compile with Warnings
+### Delete All Executable Files (Current Directory + Subdirectories)
 ```bash
-g++ -std=gnu++11 -g -O2 -Wconversion -Wshadow -Wall -Wextra -D_GLIBCXX_DEBUG -c "%f"
+find . -type f -executable -delete
 ```
-
----
-
-## 📁 File Finder Utilities
-
 ### Find All `.in` Files (Current Directory + Subdirectories)
 ```bash
 find . -type f -name "*.in"
@@ -79,12 +60,8 @@ find . -type f -name "*.in"
 find . -type f -name "*.in" -delete
 ```
 
-### Find All `.out` Files
+### Compare Two Output Files  
+> No output means the files are equal.
 ```bash
-find . -type f -name "*.out"
+diff file_name.out file_name2.out
 ```
-
----
-
-👉 **Tip:** You can add this file to your project root or your home directory for quick access anytime!
-
